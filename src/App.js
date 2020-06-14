@@ -2,61 +2,19 @@
 
 import React, { Component } from 'react';
 import '@gooddata/react-components/styles/css/main.css';
-
-import { ColumnChart } from '@gooddata/react-components';
-
-const grossProfitMeasure = '/gdc/md/xms7ga4tf3g3nzucd8380o2bev8oeknp/obj/6877';
-const dateAttributeInMonths = '/gdc/md/xms7ga4tf3g3nzucd8380o2bev8oeknp/obj/2142';
-const dateAttribute = '/gdc/md/xms7ga4tf3g3nzucd8380o2bev8oeknp/obj/2180';
+import ColumnChartComponent from './components/ColumnChart';
 
 class App extends Component {
 
-    getMonthFilter() {
-        return {
-            absoluteDateFilter: {
-                dataSet: {
-                    uri: dateAttribute
-                },
-                from: '2016-01-01',
-                to: '2016-01-31'
-            }
+    state = { selectedValue: 1 }
 
-        }
-    }
-
-    getMeasures() {
-        return [
-            {
-                measure: {
-                    localIdentifier: 'm1',
-                    definition: {
-                        measureDefinition: {
-                            item: {
-                                uri: grossProfitMeasure
-                            }
-                        }
-                    },
-                    alias: '$ Gross Profit'
-                }
-            }
-        ]
-    }
-
-    getViewBy() {
-        return {
-            visualizationAttribute:
-            {
-                displayForm: {
-                    uri: dateAttributeInMonths
-                },
-                localIdentifier: 'a1'
-            }
-        }
+    onDropdownChanged = (event) => {
+        this.setState({selectedValue: event.target.value})
     }
 
     renderDropdown() {
         return (
-            <select defaultValue="1">
+            <select defaultValue="1" onChange={this.onDropdownChanged}>
                 <option value="1">January</option>
                 <option value="2">February</option>
                 <option value="3">March</option>
@@ -74,27 +32,20 @@ class App extends Component {
     }
 
     render() {
-        const projectId = 'xms7ga4tf3g3nzucd8380o2bev8oeknp';
-        const filters = [this.getMonthFilter()];
-        const measures = this.getMeasures();
-        const viewBy = this.getViewBy();
 
         return (
             <div className="App">
                 <h1>$ Gross Profit in month {this.renderDropdown()} 2016</h1>
                 <div>
-                    <ColumnChart
-                        measures={measures}
-                        filters={filters}
-                        projectId={projectId}
+                    <ColumnChartComponent
+                        month={this.state.selectedValue}
+                        viewBy={false}
                     />
                 </div>
-                <h1>$ Gross Profit - All months</h1>
                 <div>
-                    <ColumnChart
-                        measures={measures}
-                        viewBy={viewBy}
-                        projectId={projectId}
+                    <ColumnChartComponent
+                        title='$ Gross Profit - All months'
+                        viewBy={true}
                     />
                 </div>
             </div>
