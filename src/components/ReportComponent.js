@@ -7,18 +7,17 @@ const grossProfitMeasure = '/gdc/md/xms7ga4tf3g3nzucd8380o2bev8oeknp/obj/6877';
 const dateAttributeInMonths = '/gdc/md/xms7ga4tf3g3nzucd8380o2bev8oeknp/obj/2142';
 const dateAttribute = '/gdc/md/xms7ga4tf3g3nzucd8380o2bev8oeknp/obj/2180';
 
-class ColumnChartComponent extends React.Component {
+class ReportComponent extends React.Component {
 
     getMonthFilter(month) {
-        console.log(month)
         if (month) {
             return {
                 absoluteDateFilter: {
                     dataSet: {
                         uri: dateAttribute
                     },
-                    from: `2016-0${month}-01`,
-                    to: `2016-0${month}-31`
+                    from: `2016-${('0' + month).slice(-2)}-01`,
+                    to: `2016-${('0' + month).slice(-2)}-31`
                 }
     
             }
@@ -62,29 +61,27 @@ class ColumnChartComponent extends React.Component {
         }
     }
     renderHeader(title) {
-        return title ? <div><h1>{title}</h1></div> : null;
+        return title ? <h1>{title}</h1> : null;
     }
 
     render() {
         const projectId = 'xms7ga4tf3g3nzucd8380o2bev8oeknp';
         const filters = this.getMonthFilter(this.props.month) ? [this.getMonthFilter(this.props.month)] : [];
         const measures = this.getMeasures();
-        const viewBy = this.getViewBy(this.props.viewBy);
+        const viewBy = this.getViewBy(this.props.isAllTimeEnabled);
 
         return (
             <div key={this.props.childKey}>                
                 {this.renderHeader(this.props.title)}
-                <div>
-                    <ColumnChart
+                <ColumnChart
                         filters={filters}
                         measures={measures}
                         viewBy={viewBy}
                         projectId={projectId}
                     />
-                </div>
             </div>
         );
     }
 }
 
-export default ColumnChartComponent;
+export default ReportComponent;

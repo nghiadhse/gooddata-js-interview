@@ -2,50 +2,39 @@
 
 import React, { Component } from 'react';
 import '@gooddata/react-components/styles/css/main.css';
-import ColumnChartComponent from './components/ColumnChart';
+
+import ReportComponent from './components/ReportComponent';
+import MonthFilterComponent from './components/MonthFilterComponent';
+import {MONTHS} from './constant/Months';
 
 class App extends Component {
 
-    state = { selectedValue: 1 }
+    state = { selectedValue: 1, month: '' }
 
-    onDropdownChanged = (event) => {
-        this.setState({selectedValue: event.target.value})
+    componentDidMount() {
+        this.setState({ month: MONTHS.find(m => m.value === this.state.selectedValue).name })
     }
 
-    renderDropdown() {
-        return (
-            <select defaultValue="1" onChange={this.onDropdownChanged}>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-            </select>
-        )
+    onDropdownChanged = (value) => {
+        this.setState({ selectedValue: value, month: MONTHS.find(m => m.value === +value).name });
     }
 
     render() {
 
         return (
             <div className="App">
-                <h1>$ Gross Profit in month {this.renderDropdown()} 2016</h1>
+                <strong>Month Filter:</strong> <MonthFilterComponent onChange={this.onDropdownChanged} defaultValue={1} array={MONTHS} />
                 <div>
-                    <ColumnChartComponent
+                    <ReportComponent
+                        title={`$ Gross Profit in month ${this.state.month} 2016`}
                         month={this.state.selectedValue}
-                        viewBy={false}
+                        isAllTimeEnabled ={false}
                     />
                 </div>
                 <div>
-                    <ColumnChartComponent
+                    <ReportComponent
                         title='$ Gross Profit - All months'
-                        viewBy={true}
+                        isAllTimeEnabled ={true}
                     />
                 </div>
             </div>
